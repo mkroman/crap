@@ -9,7 +9,7 @@ set(crap_sources
 	sources/crap.c
 )
 
-find_package(Giblib)
+find_package(Imlib)
 
 add_executable(crap ${crap_sources})
-target_link_libraries(crap ${GIBLIB_LIBRARY})
+target_link_libraries(crap ${IMLIB_LIBRARY})
