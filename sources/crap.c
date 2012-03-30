@@ -155,6 +155,98 @@ void crap_image_remove_lines(struct image_t* image)
 	image_swap(image, dst);
 }
 
+void crap_image_fill_holes(struct image_t *image)
+{
+	struct image_t *dst;
+	int x, y;
+	int r, g, b;
+
+	dst = image_new(image->width, image->height);
+
+	for (x = 0; x < image->width; x++)
+		for (y = 0; y < image->height; y++)
+		{
+			getpixel(image, x, y, &r, &g, &b);
+			setpixel(image, x, y, r, g, b);
+		}
+
+	for(x = 2; x < dst->width - 2; x++)
+		for(y = 0; y < dst->height; y++)
+		{
+			int c1, c2, c3, c4, c5;
+			getpixel(image, x-2, y, &c1, &g, &b);
+			getpixel(image, x-1, y, &c2, &g, &b);
+			getpixel(image, x,   y, &c3, &g, &b);
+			getpixel(image, x+1, y, &c4, &g, &b);
+			getpixel(image, x+2, y, &c5, &g, &b);
+
+			if (c1 < 127 && c2 < 127 && c3 > 128 && c4 < 127)
+				c3 = (c1 + c2 + c4) / 3;
+			else if(c2 < 127 && c3 > 128 && c4 < 127 && c5 < 127)
+				c3 = (c2 + c4 + c5) / 3;
+			setpixel(dst, x, y, c3, c3, c3);
+		}
+
+	for (x = 0; x < dst->width; x++)
+		for (y = 2; y < dst->height - 2; y++)
+		{
+			int c1, c2, c3, c4, c5;
+			getpixel(image, x-2, y, &c1, &g, &b);
+			getpixel(image, x-1, y, &c2, &g, &b);
+			getpixel(image, x,   y, &c3, &g, &b);
+			getpixel(image, x+1, y, &c4, &g, &b);
+			getpixel(image, x+2, y, &c5, &g, &b);
+
+			if(c1 < 127 && c2 < 127 && c3 > 128 && c4 < 127)
+				c3 = (c1, c2, c4) / 3;
+			else if(c2 < 127 && c3 > 128 && c4 < 127 && c5 < 127)
+				c3 = (c2 + c4 + c5) / 3;
+			setpixel(dst, x, y, c3, c3, c3);
+		}
+
+	image_swap(image, dst);
+}
+
+void crap_image_smooth(struct image_t *image)
+{
+	struct image_t *dst;
+	int msize = 3, ssize = 3;
+	int x, y, i, j, val[msize*msize];
+	int r, g, b;
+
+	dst = image_new(image->width, image->height);
+
+	for (x=0; x < image->width; x++)
+		for (y=0; y < image->height; y++)
+			setpixel(dst, x, y, 255, 255, 255);
+
+	for (x = msize/2; x < image->width - msize/2; x++)
+		for (y = msize/2; y < image->height - msize/2; y++)
+		{
+			for (i = 0; i < msize; i++)
+				for (j = 0; j < msize; j++)
+				{
+					getpixel(image, x + j - ssize/2, y + i - ssize/2, &r, &g, &b);
+					val[i * msize + j] = r;
+				}
+
+			for (i = 0; i < msize * msize / 2 + 1; i++)
+				for(j = i + 1; j < msize * msize; j++)
+				{
+					if(val[i] > val[j])
+					{
+						register int k = val[i];
+						val[i] = val[j];
+						val[j] = k;
+					}
+				}
+			i = val[msize * msize / 2];
+			setpixel(dst, x, y, i, i, i);
+		}
+
+	image_swap(image, dst);
+}
+
 int main(int argc, char** argv)
 {
 	int result = 0;
@@ -166,6 +258,8 @@ int main(int argc, char** argv)
 
 	result = crap_image_isolate_black(&image);
 	crap_image_remove_lines(&image);
+	crap_image_fill_holes(&image);
+	crap_image_smooth(&image);
 
 	imlib_save_image("test.png");
 
