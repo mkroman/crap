@@ -6,7 +6,8 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/modules)
 include_directories(headers)
 
 set(crap_sources
-	sources/crap.c
+	sources/Crap.cpp
+	sources/Image.cpp
 )
 
 find_package(Imlib)
