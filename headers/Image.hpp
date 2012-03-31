@@ -10,6 +10,21 @@ public:
 	~Image();
 
 	/*!
+	 * Color a single pixel on the image.
+	 */
+	void paintPixel(int x, int y, int red, int green, int blue);
+
+	/*!
+	 * Read the color channels for a single pixel.
+	 */
+	void readPixel(int x, int y, int& red, int& green, int& blue);
+
+	/*!
+	 * Save the image from memory to a file.
+	 */
+	void save(const std::string& path);
+
+	/*!
 	 * Get the image path.
 	 */
 	const std::string& path()
@@ -50,12 +65,13 @@ public:
 	}
 
 private:
-	unsigned int m_pitch;
-	unsigned int m_width;
-	unsigned int m_height;
-	unsigned int m_channels;
-	std::string  m_path;
-	Imlib_Image  m_image;
+	std::string    m_path;
+	Imlib_Image    m_image;
+	unsigned int   m_pitch;
+	unsigned int   m_width;
+	unsigned int   m_height;
+	unsigned int   m_channels;
+	unsigned char* m_data;
 
 	bool loadImage();
 };
