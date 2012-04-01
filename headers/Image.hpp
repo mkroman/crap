@@ -7,8 +7,11 @@
 class Image
 {
 public:
+	Image(int width, int height);
 	Image(const std::string& path);
 	~Image();
+
+	Image& operator=(Image& image);
 
 	/*!
 	 * Color a single pixel on the image.
