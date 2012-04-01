@@ -8,6 +8,7 @@ include_directories(headers)
 set(crap_sources
 	sources/Crap.cpp
 	sources/Image.cpp
+	sources/IsolationFilter.cpp
 )
 
 find_package(Imlib)

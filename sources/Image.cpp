@@ -298,17 +298,22 @@ void Image::paintPixel(int x, int y, int red, int green, int blue)
 	m_data[offset + 2] = red;
 }
 
-void Image::readPixel(int x, int y, int& red, int& green, int& blue)
+void Image::readPixel(int x, int y, int* red, int* green, int* blue)
 {
 	int offset = ((y * m_pitch) + (x * m_channels));
 
-	blue = m_data[offset];
-	green = m_data[offset + 1];
-	red = m_data[offset + 2];
+	*blue = m_data[offset];
+	*green = m_data[offset + 1];
+	*red = m_data[offset + 2];
 }
 
 void Image::save(const std::string& path)
 {
 	imlib_context_set_image(m_image);
 	imlib_save_image(path.c_str());
+}
+
+void Image::applyFilter(Filter& filter)
+{
+	filter.apply(this);
 }

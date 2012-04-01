@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <Imlib2.h>
+#include "Filter.hpp"
 
 class Image
 {
@@ -17,7 +18,12 @@ public:
 	/*!
 	 * Read the color channels for a single pixel.
 	 */
-	void readPixel(int x, int y, int& red, int& green, int& blue);
+	void readPixel(int x, int y, int* red, int* green, int* blue);
+
+	/*!
+	 * Helper function that applies a filter to its own image.
+	 */
+	void applyFilter(Filter& filter);
 
 	/*!
 	 * Save the image from memory to a file.

@@ -1,12 +1,13 @@
 #include "Crap.hpp"
+#include "IsolationFilter.hpp"
 
 int main(int argc, char* argv[])
 {
-	int x, y, red, green, blue;
-	Image* image = new Image("captcha.jpg");
-	
-	image->save("test.png");
+	Image image("captcha.jpg");
+	IsolationFilter filter;
 
-	delete image;
+	filter.apply(&image);
+	image.save("test.png");
+
 	return 0;
 }
