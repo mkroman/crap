@@ -9,6 +9,7 @@ set(crap_sources
 	sources/Crap.cpp
 	sources/Image.cpp
 	sources/IsolationFilter.cpp
+	sources/ClottingFilter.cpp
 )
 
 find_package(Imlib)
